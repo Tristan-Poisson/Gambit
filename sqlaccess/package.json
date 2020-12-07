@@ -1,0 +1,14 @@
+{
+  "name": "sqlaccess",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sqlAccess.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mssql": "^6.2.3"
+  }
+}
