@@ -29,8 +29,9 @@ module.exports.newRequest = () => {
 
 module.exports.connect = async(ip, port, hostName, password) => {
     try {
-        await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`)
+        await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`);
     } catch (err) {
+        console.log(err);
         // ... error checks
     }
 }
@@ -39,8 +40,9 @@ module.exports.sendRequest = async(request) => {
     var result;
 
     try {
-        result = await sql.query`${request.body}`
+        result = await sql.query`${request.body}`;
     } catch (err) {
+        console.log(err);
         result = undefined
     }
     return result;
