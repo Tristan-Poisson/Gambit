@@ -1,5 +1,15 @@
 const sql = require('mssql');
 
+var config = {
+    "user" : "",
+    "password" : "",
+    "server" : "localhost",
+    "database" : "name",
+    "option" : {
+        "encrypt" : true
+    }
+}
+
 function Request() {
     this.body = "";
     
@@ -27,13 +37,24 @@ module.exports.newRequest = () => {
     return new Request();
 }
 
-module.exports.connect = async(ip, port, hostName, password) => {
-    try {
+module.exports.connect = async(ip, user, password) => {
+    config["user"] = user;
+    config["password"] = password;
+    config["server"] = ip;
+
+    await sql.connect(config, err => {
+            if (err) {
+                throw err;
+            }
+            console.log("connection successful");
+        }
+    );
+    /*try {
         await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`);
     } catch (err) {
         console.log(err);
         // ... error checks
-    }
+    }*/
 }
 
 module.exports.sendRequest = async(request) => {
