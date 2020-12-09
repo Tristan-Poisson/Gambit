@@ -37,10 +37,10 @@ module.exports.newRequest = () => {
     return new Request();
 }
 
-module.exports.connect = async(ip, user, password) => {
+module.exports.connect = async(server, user, password) => {
     config["user"] = user;
     config["password"] = password;
-    config["server"] = ip;
+    config["server"] = server;
 
     await sql.connect(config, err => {
             if (err) {
