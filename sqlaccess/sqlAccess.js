@@ -48,8 +48,8 @@ module.exports.connect = async(server, user, password) => {
     config.password = password;
     config.host = server;
 
-    connection = await mariadb.createConnection(config);
-    return await connection.connect(err => {
+    connection = mariadb.createConnection(config);
+    return connection.connect(err => {
         if (err) {
           console.log("not connected due to error: " + err);
           return false;
@@ -80,16 +80,16 @@ module.exports.disconnect = () => {
 }
 
 module.exports.sendRequest = async(request) => {
-    var result = {};
+    var result = [];
 
     connection.query(request.body, (err, rows) => {
         if (err) {
             console.log(err);
             return;
         }
-        result.rows = rows;
-        result.err = err;
-
+        for (let i = 0; i < rows.length; i++)
+            result.push(rows[i]);
+        console.log(result);
     });
     return result;
 }
