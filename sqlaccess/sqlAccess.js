@@ -64,7 +64,7 @@ module.exports.connect = (server, user, password) => {
     }*/
 }
 
-module.exports.sendRequest = async(request) => {
+module.exports.sendRequest = (request) => {
     var result;
 
     connection.query(request.body)
