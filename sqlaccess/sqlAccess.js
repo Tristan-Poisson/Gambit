@@ -4,6 +4,7 @@ var config = {
     host : "",
     user : "",
     password : "",
+    port: 3306,
     connectionLimit : 5,
 }
 
@@ -75,9 +76,13 @@ module.exports.connect = (server, user, password) => {
 }
 
 module.exports.sendRequest = (request) => {
-    var result;
+    var result = {};
 
     connection.query(request.body, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
         result.rows = rows;
         result.err = err;
 
