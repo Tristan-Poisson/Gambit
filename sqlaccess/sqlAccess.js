@@ -43,7 +43,7 @@ module.exports.newRequest = () => {
     return new Request();
 }
 
-module.exports.connect = (server, user, password) => {
+module.exports.connect = async(server, user, password) => {
     config.user = user;
     config.password = password;
     config.host = server;
@@ -75,11 +75,11 @@ module.exports.connect = (server, user, password) => {
     }*/
 }
 
-module.exports.disconnect = () => {
+module.exports.disconnect = async() => {
     connection.end();
 }
 
-module.exports.sendRequest = (request) => {
+module.exports.sendRequest = async(request) => {
     var result = {};
 
     connection.query(request.body, (err, rows) => {
