@@ -1,6 +1,6 @@
 --INIT MARIADB
 
---sudo mariadb
+$ sudo mariadb
 
 select user, plugin from mysql.user;
 CREATE USER 'You'@'localhost' IDENTIFIED BY '';
@@ -31,7 +31,7 @@ CREATE TABLE if not exists Status(id Integer not null PRIMARY KEY AUTO_INCREMENT
 --Show * from tables 1 to 4
 
 Select * from Users;
-Select * from Permissions;
+Select * from Perms;
 Select * from Activities;
 Select * from Status;
 
