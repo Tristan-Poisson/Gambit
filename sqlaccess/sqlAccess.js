@@ -48,7 +48,8 @@ module.exports.connect = (server, user, password) => {
     config.host = server;
     pool = mariadb.createPool(config);
 
-    pool.getConnection()
+    connection = mariadb.createConnection(config);
+    /*pool.getConnection()
     .then(conn => {
         connection = conn;
         console.log("connection successful");
@@ -56,7 +57,7 @@ module.exports.connect = (server, user, password) => {
     ).catch(err => {
         console.log("connection error");
         console.log(err);
-    });
+    });*/
     /*try {
         await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`);
     } catch (err) {
