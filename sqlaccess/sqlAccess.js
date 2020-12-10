@@ -54,6 +54,7 @@ module.exports.connect = (server, user, password) => {
         console.log("connection successful");
     }
     ).catch(err => {
+        console.log("connection error");
         console.log(err);
     });
     /*try {
