@@ -1,21 +1,26 @@
-const sql = require('mssql');
+const mariadb = require('mariadb');
 
 var config = {
-    "user" : "",
-    "password" : "",
-    "server" : "localhost",
-    "database" : "name",
-    "option" : {
-        "encrypt" : true
-    }
+    host : "",
+    user : "",
+    password : "",
+    connectionLimit : 5,
 }
+
+var pool = null;
+var connection = null;
 
 function Request() {
     this.body = "";
-    
 
-    this.select = function (arg) {
-        this.body += `SELECT ${arg} `
+    this.select = function (...args) {
+        this.body += `SELECT `
+        for (arg in args) {
+            this.body += `${arg} `
+            if (arg != args[args.length - 1]) {
+                this.body += `${arg} `
+            }
+        }
         return this;
     }
 
@@ -37,18 +42,30 @@ module.exports.newRequest = () => {
     return new Request();
 }
 
-module.exports.connect = async(server, user, password) => {
-    config["user"] = user;
-    config["password"] = password;
-    config["server"] = server;
+module.exports.connect = (server, user, password) => {
+    config.user = user;
+    config.password = password;
+    config.host = server;
 
-    await sql.connect(config, err => {
-            if (err) {
-                throw err;
-            }
-            console.log("connection successful");
+    connection = mariadb.createConnection(config);
+    return connection.connect(err => {
+        if (err) {
+          console.log("not connected due to error: " + err);
+          return false;
+        } else {
+          console.log("connected ! connection id is " + connection.threadId);
+          return true;
         }
-    );
+    });
+    /*pool.getConnection()
+    .then(conn => {
+        connection = conn;
+        console.log("connection successful");
+    }
+    ).catch(err => {
+        console.log("connection error");
+        console.log(err);
+    });*/
     /*try {
         await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`);
     } catch (err) {
@@ -57,14 +74,13 @@ module.exports.connect = async(server, user, password) => {
     }*/
 }
 
-module.exports.sendRequest = async(request) => {
+module.exports.sendRequest = (request) => {
     var result;
 
-    try {
-        result = await sql.query`${request.body}`;
-    } catch (err) {
-        console.log(err);
-        result = undefined
-    }
+    connection.query(request.body, (err, rows) => {
+        result.rows = rows;
+        result.err = err;
+
+    });
     return result;
 }
