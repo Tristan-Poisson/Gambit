@@ -75,7 +75,7 @@ module.exports.connect = async(server, user, password) => {
     }*/
 }
 
-module.exports.disconnect = async() => {
+module.exports.disconnect = () => {
     connection.end();
 }
 
