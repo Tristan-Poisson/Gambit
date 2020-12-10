@@ -75,6 +75,10 @@ module.exports.connect = (server, user, password) => {
     }*/
 }
 
+module.exports.disconnect = () => {
+    connection.end();
+}
+
 module.exports.sendRequest = (request) => {
     var result = {};
 
