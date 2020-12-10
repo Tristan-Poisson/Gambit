@@ -13,8 +13,14 @@ var connection = null;
 function Request() {
     this.body = "";
 
-    this.select = function (arg) {
-        this.body += `SELECT ${arg} `
+    this.select = function (...args) {
+        this.body += `SELECT `
+        for (arg in args) {
+            this.body += `${arg} `
+            if (arg != args[args.length - 1]) {
+                this.body += `${arg} `
+            }
+        }
         return this;
     }
 
@@ -61,7 +67,7 @@ module.exports.connect = async(server, user, password) => {
 module.exports.sendRequest = async(request) => {
     var result;
 
-    conn.query(request.body)
+    connection.query(request.body)
         .then((rows) => {
             result.rows = rows;
             console.log(rows);
