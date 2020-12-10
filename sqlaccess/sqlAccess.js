@@ -1,18 +1,17 @@
-const sql = require('mssql');
+const mariadb = require('mariadb');
 
 var config = {
-    "user" : "",
-    "password" : "",
-    "server" : "localhost",
-    "database" : "name",
-    "option" : {
-        "encrypt" : true
-    }
+    host : "",
+    user : "",
+    password : "",
+    connectionLimit : 5,
 }
+
+var pool = null;
+var connection = null;
 
 function Request() {
     this.body = "";
-    
 
     this.select = function (arg) {
         this.body += `SELECT ${arg} `
@@ -38,17 +37,19 @@ module.exports.newRequest = () => {
 }
 
 module.exports.connect = async(server, user, password) => {
-    config["user"] = user;
-    config["password"] = password;
-    config["server"] = server;
+    config.user = user;
+    config.password = password;
+    config.host = server;
+    pool = mariadb.createPool(config);
 
-    await sql.connect(config, err => {
-            if (err) {
-                throw err;
-            }
-            console.log("connection successful");
-        }
-    );
+    pool.getConnection()
+    .then(conn => {
+        connection = conn;
+        console.log("connection successful");
+    }
+    ).catch(err => {
+        console.log(err);
+    });
     /*try {
         await sql.connect(`mssql://${hostName}:${password}@${ip}:${port}`);
     } catch (err) {
@@ -60,11 +61,18 @@ module.exports.connect = async(server, user, password) => {
 module.exports.sendRequest = async(request) => {
     var result;
 
-    try {
-        result = await sql.query`${request.body}`;
-    } catch (err) {
-        console.log(err);
-        result = undefined
-    }
+    conn.query(request.body)
+        .then((rows) => {
+            result.rows = rows;
+            console.log(rows);
+        })
+        .then((res) => {
+            result.res = res;
+            console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
+        })
+        .catch(err => {
+            //handle error
+            console.log(err); 
+        })
     return result;
 }
