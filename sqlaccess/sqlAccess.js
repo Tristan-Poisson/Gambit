@@ -48,7 +48,7 @@ module.exports.connect = async(server, user, password) => {
     config.host = server;
 
     pool = mariadb.createPool(config);
-    pool.getConnection()
+    await pool.getConnection()
     .then(conn => {
         console.log("connected ! connection id is " + conn.threadId);
         conn.release(); //release to pool
@@ -90,7 +90,7 @@ module.exports.disconnect = () => {
 module.exports.sendRequest = async(request) => {
     var result;
 
-    await tpool.getConnection()
+    await pool.getConnection()
     .then(conn => {
         conn.query(request.body)
         .then(rows => {
