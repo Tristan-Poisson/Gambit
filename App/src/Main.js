@@ -23,6 +23,9 @@ export class Main extends Component {
                 <h2>Quelque explication sur ce site</h2>
                 <p></p>
             </div>
+            <div class="connect">
+                <p><a href="/connect">text</a></p>
+            </div>
             <div class="biss1">
                 <p>text</p>
             </div>
