@@ -84,18 +84,32 @@ module.exports.connect = async(server, user, password) => {
 }
 
 module.exports.disconnect = () => {
-    connection.end();
+    process.exit(1);
 }
 
 module.exports.sendRequest = async(request) => {
     var result;
+    var conn;
 
-    await pool.getConnection()
-    .then(conn => {
+    conn = await pool.getConnection();
+    await conn.query(request.body)
+        .then(rows => {
+            result = rows;
+	        //console.log("rows"); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+	        //console.log(rows); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+	        //console.log("END"); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+        })
+        .catch(err => {
+	        //handle error
+        });
+    conn.release();
+    /*.then(conn => {
         conn.query(request.body)
         .then(rows => {
             result = rows;
-	        console.log(rows); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+	        //console.log("rows"); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+	        //console.log(rows); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
+	        //console.log("END"); //[ { 'NOW()': 2018-07-02T17:06:38.000Z }, meta: [ ... ] ]
         })
         .catch(err => {
 	        //handle error
@@ -114,7 +128,7 @@ module.exports.sendRequest = async(request) => {
             result.push(rows[i]);
         console.log(result);
     });*/
-    console.log("result : " + result);
+    //console.log("result : " + result);
     return result;
 }
 

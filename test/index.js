@@ -1,30 +1,27 @@
 var sqlTest = require("../sqlaccess/sqlAccess.js");
 
-async function main() {
+var sqlPattern = require("../sqlpattern/sqlPattern.js");
 
-    var r = sqlTest.newRequest();
-    //r.select("*").from("a");
-    r.body = "select * from EIP_GAMBIT.Users;"
-    console.log(r.body);
-    
+async function main() {
     await sqlTest.connect("127.0.0.1", "killb", "@0Z");
-    //*/
-    console.log("Pre");
-    console.log(sqlTest.sendRequest(r));
-    console.log("After");
+    var r = sqlTest.newRequest();
+ 
+    var user = {
+        table : "EIP_GAMBIT.myTable",
+        id : "6",
+        val : "KARL",
+    }
+    console.log(await sqlPattern.insertUserConfig(user));
     
-    //sqlTest.disconnect();
+    //console.log(await sqlPattern.getUser("1"));
+    
+    r.body = "select * from EIP_GAMBIT.myTable;"
+    await sqlTest.sendRequest(r)
+    .then(result => {
+        console.log(result);
+    });
+    
+    sqlTest.disconnect();
 }
 
 main();
-const readline = require('readline');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-rl.question('', (answer) => {
-  console.log(`bye`);
-  rl.close();
-});
